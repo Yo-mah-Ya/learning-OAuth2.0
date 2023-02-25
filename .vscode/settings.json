@@ -1,0 +1,32 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "bin": true,
+  },
+  "editor.formatOnSave": true,
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "cSpell.enabled": true,
+  "cSpell.words": [
+    "authcheck",
+    "deepmap",
+    "Formdata",
+    "getkin",
+    "gorillamux",
+    "lestrrat",
+    "Middlewares",
+    "Oapi",
+    "oapi-codegen",
+    "oidc",
+    "openapi",
+    "unescaping",
+    "Unmarshalling"
+  ]
+}

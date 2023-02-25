@@ -1,0 +1,154 @@
+openapi: 3.0.0
+info:
+  title: Sample item OpenAPI
+  version: "1.0"
+  description: It's sample API Document
+servers:
+  - url: "http://localhost:3000"
+paths:
+  /auth:
+    get:
+      operationId: auth
+      description: auth
+      parameters:
+        - in: query
+          name: client_id
+          schema:
+            type: string
+          required: true
+          description: The ID for the desired user pool app client.
+        - in: query
+          name: state
+          schema:
+            type: string
+          required: true
+          description: (optional but recommended) - A random value that's used to prevent cross-site request forgery (CSRF) attacks.
+        - in: query
+          name: scope
+          schema:
+            type: string
+          required: true
+          description: |-
+            A space-separated list of scopes to request for the generated tokens. Note that:
+              - An ID token is only generated if the openid scope is requested.
+              - The phone, email, and profile scopes can only be requested if openid is also requested.
+              - A vended access token can only be used to make user pool API calls if aws.cognito.signin.user.admin is requested.
+        - in: query
+          name: redirect_uri
+          schema:
+            type: string
+          required: true
+          description: The URL that a user is directed to after successful authentication.
+        - in: query
+          name: response_type
+          schema:
+            type: string
+            enum:
+              - code
+          required: true
+          description: Set to “code” for this grant type.
+      responses:
+        '200':
+          description: |-
+            A CSRF token is returned in a cookie.
+            If an identity provider was specified in the request from step 1, the rest of this step is skipped.
+            The user is automatically redirected to the appropriate identity provider's authentication page.
+            Otherwise, the end user is redirected to https://AUTH_DOMAIN/login (which hosts the auto-generated UI) with the same query parameters set from step 1.
+            Here they can either authenticate with the user pool or select one of the third-party providers that's configured for the designated app client.
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+  /authcheck:
+    post:
+      operationId: authCheck
+      description: authCheck
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                  username:
+                    description: username
+                    type: string
+                  password:
+                    description: password
+                    type: string
+      responses:
+        '200':
+          description: authcheck response
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+  /token:
+    get:
+      operationId: token
+      description: token
+      parameters:
+        - in: query
+          name: grant_type
+          schema:
+            type: string
+          required: true
+          description: Set to “authorization_code” for this grant.
+        - in: query
+          name: code
+          schema:
+            type: string
+          required: true
+          description: The authorization code that's vended to the user.
+        - in: query
+          name: client_id
+          schema:
+            type: string
+          required: true
+          description: Same as from the request in step 1.
+        - in: query
+          name: redirect_uri
+          schema:
+            type: string
+          required: true
+          description: Same as from the request in step 1.
+        - in: query
+          name: client_secret
+          schema:
+            type: string
+          required: true
+          description:  (optional, is required if a code_challenge was specified in the original request) – The base64 URL-encoded representation of the unhashed, random string that was used to generate the PKCE code_challenge in the original request.
+        - in: cookie
+          name: session
+          schema:
+            type: string
+          description: session
+      responses:
+        '200':
+          description: auth response
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+  /health:
+    get:
+      operationId: healthCheck
+      description: healthCheck
+      responses:
+        '200':
+          description: healthCheck response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+components:
+  schemas:
+    Message:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
