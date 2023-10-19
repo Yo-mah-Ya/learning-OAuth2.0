@@ -13,6 +13,8 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": true
   },
+  "go.goroot": "~/.goenv/versions/1.21.1",
+  "go.useLanguageServer": true,
   "cSpell.enabled": true,
   "cSpell.words": [
     "authcheck",
